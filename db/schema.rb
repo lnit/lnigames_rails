@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_29_084846) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_29_091523) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "point_rank_items", force: :cascade do |t|
+    t.bigint "ranking_id", null: false
+    t.integer "score", null: false
+    t.string "name"
+    t.string "user_hash"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ranking_id"], name: "index_point_rank_items_on_ranking_id"
+    t.index ["user_hash"], name: "index_point_rank_items_on_user_hash", unique: true
+  end
 
   create_table "projects", force: :cascade do |t|
     t.string "code"
@@ -30,5 +41,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_29_084846) do
     t.index ["project_id"], name: "index_rankings_on_project_id"
   end
 
+  add_foreign_key "point_rank_items", "rankings"
   add_foreign_key "rankings", "projects"
 end
