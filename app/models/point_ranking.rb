@@ -1,0 +1,2 @@
+class PointRanking < Ranking
+end
