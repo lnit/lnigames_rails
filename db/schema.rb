@@ -36,8 +36,10 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_29_091523) do
   create_table "rankings", force: :cascade do |t|
     t.string "type"
     t.bigint "project_id", null: false
+    t.integer "num", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["num"], name: "index_rankings_on_num", unique: true
     t.index ["project_id"], name: "index_rankings_on_project_id"
   end
 
