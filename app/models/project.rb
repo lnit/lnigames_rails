@@ -1,5 +1,5 @@
 class Project < ApplicationRecord
-  has_many :rankings, dependent: :destroy
+  has_many :ranking_boards, dependent: :destroy
 
   before_create do
     self.secret = SecureRandom.urlsafe_base64

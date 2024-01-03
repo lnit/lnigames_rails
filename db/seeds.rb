@@ -10,6 +10,6 @@
 
 pj = Project.find_or_create_by!(code: 'TsumugiStep')
 
-if pj.rankings.blank?
-  PointRanking.create!(project: pj)
+if pj.ranking_boards.blank?
+  PointRankingBoard.create!(project: pj)
 end
