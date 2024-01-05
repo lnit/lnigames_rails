@@ -14,13 +14,13 @@ class Api::V1::RankingItemsController < Api::V1::ApplicationController
       :project_code,
       :board_num,
       :score,
-      :user_identifier,
+      :uid,
       :name,
     )
   end
 
   def ranking_params
-    permitted_params.slice(:score, :user_identifier, :name)
+    permitted_params.slice(:score, :uid, :name)
   end
 
   def project
