@@ -22,6 +22,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_29_091523) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ranking_board_id"], name: "index_point_rank_items_on_ranking_board_id"
+    t.index ["score"], name: "index_point_rank_items_on_score"
+    t.index ["updated_at"], name: "index_point_rank_items_on_updated_at"
     t.index ["user_identifier"], name: "index_point_rank_items_on_user_identifier", unique: true
   end
 
