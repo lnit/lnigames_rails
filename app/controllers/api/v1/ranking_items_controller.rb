@@ -1,6 +1,6 @@
 class Api::V1::RankingItemsController < Api::V1::ApplicationController
   def index
-
+    render json: ranking.display_ranking
   end
 
   def create

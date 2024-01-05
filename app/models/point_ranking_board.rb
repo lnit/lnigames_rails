@@ -13,4 +13,30 @@ class PointRankingBoard < RankingBoard
 
     item
   end
+
+  def display_ranking
+    {
+      top_ranking: top_ranking
+    }
+  end
+
+  private
+
+  def top_ranking
+    last_rank = nil
+    last_score = nil
+    rank_items.order(score: :desc, updated_at: :asc).map.with_index do |item, i|
+      obj = item.slice(:score, :name)
+
+      if item.score == last_score
+        obj[:rank] = last_rank
+      else
+        obj[:rank] = i + 1
+        last_rank = i + 1
+        last_score = item.score
+      end
+
+      obj
+    end
+  end
 end
