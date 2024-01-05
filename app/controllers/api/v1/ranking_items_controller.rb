@@ -1,6 +1,6 @@
 class Api::V1::RankingItemsController < Api::V1::ApplicationController
   def index
-    render json: ranking.display_ranking
+    render json: ranking.display_ranking(uid: permitted_params[:uid])
   end
 
   def create

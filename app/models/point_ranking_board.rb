@@ -14,9 +14,10 @@ class PointRankingBoard < RankingBoard
     item
   end
 
-  def display_ranking
+  def display_ranking(uid: nil)
     {
-      top_ranking: top_ranking
+      top_ranking: top_ranking,
+      high_score: high_score(uid),
     }
   end
 
@@ -38,5 +39,17 @@ class PointRankingBoard < RankingBoard
 
       obj
     end
+  end
+
+  def high_score(uid)
+    return {} unless (item = rank_items.find_by(uid:))
+
+    # プレイヤーのスコアより高いレコードを取得して順位を算出
+    rank = rank_items.where("score > ?", item.score).count + 1
+
+    {
+      score: item.score,
+      rank: rank,
+    }
   end
 end
