@@ -1,4 +1,6 @@
 class RankingBoard < ApplicationRecord
+  MAX_LIST_COUNT = 100
+
   belongs_to :project
 
   before_create do
