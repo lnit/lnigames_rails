@@ -1,3 +1,5 @@
 class DashboardsController < ApplicationController
-  def index; end
+  def index
+    render plain: "OK"
+  end
 end
