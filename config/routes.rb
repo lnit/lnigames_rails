@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :ranking_items, only: %i(index create)
+      resource :ranking_name, only: %i(update)
     end
   end
 
