@@ -50,6 +50,7 @@ class PointRankingBoard < RankingBoard
     {
       score: item.score,
       rank: rank,
+      name: item.name
     }
   end
 end

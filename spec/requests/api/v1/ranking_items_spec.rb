@@ -32,7 +32,7 @@ RSpec.describe "Api::V1::RankingItems", type: :request do
           { name: "ユーザー1", rank: 6, score: 100 },
         ],
         high_score: {
-          rank: 4, score: 250
+          rank: 4, score: 250, name: "プレイヤーさん"
         },
       }.as_json)
     end
