@@ -41,6 +41,10 @@ RSpec.describe "Api::V1::RankingItems", type: :request do
   describe "POST /api/v1/ranking_items" do
     subject(:post_score) { post api_v1_ranking_items_path, params: params }
 
+    before do
+      allow(LniGamesAuth).to receive(:valid?).and_return(true)
+    end
+
     let(:params) do
       {
         project_code: project.code,
@@ -48,6 +52,7 @@ RSpec.describe "Api::V1::RankingItems", type: :request do
         uid: SecureRandom.uuid,
         name: "テスト◆太郎",
         score: "100",
+        d: "testdigest"
       }
     end
 

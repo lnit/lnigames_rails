@@ -1,4 +1,6 @@
 class Api::V1::RankingItemsController < Api::V1::ApplicationController
+  before_action :authenticate!, only: [:create]
+
   def index
     render json: ranking.display_ranking(uid: permitted_params[:uid])
   end
@@ -29,5 +31,16 @@ class Api::V1::RankingItemsController < Api::V1::ApplicationController
 
   def ranking
     @ranking ||= project.ranking_boards.find_by!(num: permitted_params[:board_num])
+  end
+
+  def authenticate!
+    auth = {
+      pj: params[:project_code],
+      uid: params[:uid],
+      arg_str: params[:score],
+      digest: params[:d]
+    }
+
+    head :forbidden unless LniGamesAuth.valid?(**auth)
   end
 end

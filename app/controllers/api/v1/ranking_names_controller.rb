@@ -1,4 +1,6 @@
 class Api::V1::RankingNamesController < Api::V1::ApplicationController
+  before_action :authenticate!, only: [:update]
+
   def update
     rank_item.update!(name: permitted_params[:name])
 
@@ -24,5 +26,16 @@ class Api::V1::RankingNamesController < Api::V1::ApplicationController
 
   def rank_item
     @rank_item = ranking.rank_items.find_by!(uid: permitted_params[:uid])
+  end
+
+  def authenticate!
+    auth = {
+      pj: params[:project_code],
+      uid: params[:uid],
+      arg_str: params[:name],
+      digest: params[:d]
+    }
+
+    head :forbidden unless LniGamesAuth.valid?(**auth)
   end
 end
