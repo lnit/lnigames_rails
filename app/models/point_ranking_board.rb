@@ -14,19 +14,20 @@ class PointRankingBoard < RankingBoard
 
   def display_ranking(uid: nil)
     {
-      top_ranking: top_ranking,
+      top_ranking: top_ranking(uid),
       high_score: high_score(uid),
     }
   end
 
   private
 
-  def top_ranking
+  def top_ranking(uid)
     last_rank = nil
     last_score = nil
     rank_items.order(score: :desc, updated_at: :asc).limit(MAX_LIST_COUNT).map.with_index do |item, i|
       obj = item.slice(:score, :name)
 
+      # 同着を考慮した順位の算出
       if item.score == last_score
         obj[:rank] = last_rank
       else
@@ -34,6 +35,9 @@ class PointRankingBoard < RankingBoard
         last_rank = i + 1
         last_score = item.score
       end
+
+      # プレイヤーのハイスコアだった場合のフラグを追加
+      obj[:is_player] = (item.uid == uid)
 
       obj
     end
