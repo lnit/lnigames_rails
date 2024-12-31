@@ -1,13 +1,20 @@
 class PointRankingBoard < RankingBoard
   has_many :rank_items, class_name: 'PointRankItem', foreign_key: :ranking_board_id
+  has_many :recent_items, class_name: 'RecentRankItem', foreign_key: :ranking_board_id
 
   def add_item!(params)
     item = rank_items.find_or_initialize_by(uid: params[:uid])
 
     # 新規レコード、または過去のスコアの方が低い場合にスコアを保存
     if item.new_record? || item.score <= params[:score].to_i
+      new_record_score = true
       item.update!(params)
+    else
+      new_record_score = false
     end
+
+    # 最新のスコアは毎回保存
+    update_recent_score!(params[:score], params[:uid], new_record_score)
 
     item
   end
@@ -16,6 +23,7 @@ class PointRankingBoard < RankingBoard
     {
       top_ranking: top_ranking(uid),
       high_score: high_score(uid),
+      recent_score: recent_score(uid),
     }
   end
 
@@ -46,7 +54,7 @@ class PointRankingBoard < RankingBoard
   def high_score(uid)
     return {} unless (item = rank_items.find_by(uid:))
 
-    # プレイヤーのスコアより高いレコードを取得して順位を算出
+    # プレイヤーのハイスコアより高いレコードを取得して順位を算出
     rank = rank_items.where("score > ?", item.score).count + 1
 
     {
@@ -54,5 +62,24 @@ class PointRankingBoard < RankingBoard
       rank: rank,
       name: item.name
     }
+  end
+
+  def recent_score(uid)
+    return {} unless (item = recent_items.find_by(uid:))
+
+    # プレイヤーの最新スコアより高いレコードを取得して順位を算出
+    rank = rank_items.where("score > ?", item.score).count + 1
+
+    {
+      score: item.score,
+      rank: rank,
+      new_record_score: item.new_record_score?
+    }
+  end
+
+  def update_recent_score!(score, uid, new_record_score)
+    recent = recent_items.find_or_initialize_by(uid:)
+
+    recent.update!(score:, uid:, new_record_score:)
   end
 end

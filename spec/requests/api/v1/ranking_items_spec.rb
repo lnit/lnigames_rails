@@ -17,9 +17,10 @@ RSpec.describe "Api::V1::RankingItems", type: :request do
     before do
       create_list(:point_rank_item, 5, ranking_board: board)
       create(:point_rank_item, ranking_board: board, uid: player_uid, name: "プレイヤーさん", score: 250)
+      create(:recent_rank_item, ranking_board: board, uid: player_uid, score: 250, new_record_score: true)
     end
 
-    it "works! (now write some real specs)" do
+    it "スコア一覧が返却されること" do
       get api_v1_ranking_items_path(params)
 
       expect(JSON.parse(response.body)).to include({
@@ -33,6 +34,9 @@ RSpec.describe "Api::V1::RankingItems", type: :request do
         ],
         high_score: {
           rank: 4, score: 250, name: "プレイヤーさん"
+        },
+        recent_score: {
+          rank: 4, score: 250, new_record_score: true
         },
       }.as_json)
     end
@@ -57,5 +61,6 @@ RSpec.describe "Api::V1::RankingItems", type: :request do
     end
 
     it { expect { post_score }.to change(PointRankItem, :count).by(1) }
+    it { expect { post_score }.to change(RecentRankItem, :count).by(1) }
   end
 end
