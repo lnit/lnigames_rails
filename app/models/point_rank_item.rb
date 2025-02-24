@@ -1,4 +1,6 @@
 class PointRankItem < ApplicationRecord
+  include Decorator::PointScore
+
   belongs_to :ranking_board
 
   attribute :name, :string,  default: "No Name"
