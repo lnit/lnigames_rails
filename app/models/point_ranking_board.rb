@@ -71,7 +71,7 @@ class PointRankingBoard < RankingBoard
     rank = rank_items.where("score > ?", item.score).count + 1
 
     {
-      score: item.score,
+      score: item.score.round,
       rank: rank,
       new_record_score: item.new_record_score?
     }

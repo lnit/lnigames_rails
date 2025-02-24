@@ -47,7 +47,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_31_073509) do
 
   create_table "recent_rank_items", force: :cascade do |t|
     t.bigint "ranking_board_id", null: false
-    t.integer "score", null: false, comment: "最新の記録"
+    t.float "score", null: false, comment: "最新の記録"
     t.string "uid", null: false
     t.boolean "new_record_score", default: false, null: false, comment: "新記録かどうか"
     t.datetime "created_at", null: false
