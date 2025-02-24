@@ -23,20 +23,20 @@ RSpec.describe "Api::V1::RankingItems", type: :request do
     it "スコア一覧が返却されること" do
       get api_v1_ranking_items_path(params)
 
-      expect(JSON.parse(response.body)).to include({
+      expect(JSON.parse(response.body)).to eq({
         top_ranking: [
-          { name: "ユーザー5", rank: 1, score: 500, is_player: false },
-          { name: "ユーザー4", rank: 2, score: 400, is_player: false },
-          { name: "ユーザー3", rank: 3, score: 300, is_player: false },
-          { name: "プレイヤーさん", rank: 4, score: 250, is_player: true },
-          { name: "ユーザー2", rank: 5, score: 200, is_player: false },
-          { name: "ユーザー1", rank: 6, score: 100, is_player: false },
+          { name: "ユーザー5", rank: 1, score: "500", is_player: false },
+          { name: "ユーザー4", rank: 2, score: "400", is_player: false },
+          { name: "ユーザー3", rank: 3, score: "300", is_player: false },
+          { name: "プレイヤーさん", rank: 4, score: "250", is_player: true },
+          { name: "ユーザー2", rank: 5, score: "200", is_player: false },
+          { name: "ユーザー1", rank: 6, score: "100", is_player: false },
         ],
         high_score: {
-          rank: 4, score: 250, name: "プレイヤーさん"
+          rank: 4, score: "250", name: "プレイヤーさん"
         },
         recent_score: {
-          rank: 4, score: 250, new_record_score: true
+          rank: 4, score: "250", new_record_score: true
         },
       }.as_json)
     end

@@ -34,6 +34,7 @@ class PointRankingBoard < RankingBoard
     last_score = nil
     rank_items.order(score: :desc, updated_at: :asc).limit(MAX_LIST_COUNT).map.with_index do |item, i|
       obj = item.slice(:score, :name)
+      obj[:score] = obj[:score].to_s
 
       # 同着を考慮した順位の算出
       if item.score == last_score
@@ -58,7 +59,7 @@ class PointRankingBoard < RankingBoard
     rank = rank_items.where("score > ?", item.score).count + 1
 
     {
-      score: item.score,
+      score: item.score.to_s,
       rank: rank,
       name: item.name
     }
@@ -71,7 +72,7 @@ class PointRankingBoard < RankingBoard
     rank = rank_items.where("score > ?", item.score).count + 1
 
     {
-      score: item.score.round,
+      score: item.score.round.to_s,
       rank: rank,
       new_record_score: item.new_record_score?
     }
