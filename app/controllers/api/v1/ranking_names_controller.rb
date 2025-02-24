@@ -1,28 +1,19 @@
-class Api::V1::RankingItemsController < Api::V1::ApplicationController
-  before_action :authenticate!, only: [:create]
+class Api::V1::RankingNamesController < Api::V1::ApplicationController
+  before_action :authenticate!, only: [:update]
 
-  def index
-    render json: ranking.display_ranking(uid: permitted_params[:uid])
-  end
+  def update
+    rank_item.update!(name: permitted_params[:name])
 
-  def create
-    ranking.add_item!(ranking_params)
-
-    head :created
+    head :no_content
   end
 
   def permitted_params
     @permitted_params ||= params.permit(
       :project_code,
       :board_num,
-      :score,
       :uid,
       :name,
     )
-  end
-
-  def ranking_params
-    permitted_params.slice(:score, :uid, :name)
   end
 
   def project
@@ -33,11 +24,15 @@ class Api::V1::RankingItemsController < Api::V1::ApplicationController
     @ranking ||= project.ranking_boards.find_by!(num: permitted_params[:board_num])
   end
 
+  def rank_item
+    @rank_item = ranking.rank_items.find_by!(uid: permitted_params[:uid])
+  end
+
   def authenticate!
     auth = {
       pj: params[:project_code],
       uid: params[:uid],
-      arg_str: params[:score],
+      arg_str: params[:name],
       digest: params[:d]
     }
 

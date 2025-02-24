@@ -2,8 +2,6 @@ class PointRankingBoard < RankingBoard
   has_many :rank_items, class_name: 'PointRankItem', foreign_key: :ranking_board_id
 
   def add_item!(params)
-    params[:name] = "No Name" if params[:name].blank?
-
     item = rank_items.find_or_initialize_by(uid: params[:uid])
 
     # 新規レコード、または過去のスコアの方が低い場合にスコアを保存
@@ -50,6 +48,7 @@ class PointRankingBoard < RankingBoard
     {
       score: item.score,
       rank: rank,
+      name: item.name
     }
   end
 end
