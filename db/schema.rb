@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_29_091523) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_31_073509) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -45,6 +45,19 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_29_091523) do
     t.index ["project_id"], name: "index_ranking_boards_on_project_id"
   end
 
+  create_table "recent_rank_items", force: :cascade do |t|
+    t.bigint "ranking_board_id", null: false
+    t.integer "score", null: false, comment: "最新の記録"
+    t.string "uid", null: false
+    t.boolean "new_record_score", default: false, null: false, comment: "新記録かどうか"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ranking_board_id"], name: "index_recent_rank_items_on_ranking_board_id"
+    t.index ["score"], name: "index_recent_rank_items_on_score"
+    t.index ["uid"], name: "index_recent_rank_items_on_uid", unique: true
+  end
+
   add_foreign_key "point_rank_items", "ranking_boards"
   add_foreign_key "ranking_boards", "projects"
+  add_foreign_key "recent_rank_items", "ranking_boards"
 end
