@@ -14,25 +14,26 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_31_073509) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "point_rank_items", force: :cascade do |t|
-    t.bigint "ranking_board_id", null: false
-    t.integer "score", null: false
-    t.string "name"
-    t.string "uid", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["ranking_board_id"], name: "index_point_rank_items_on_ranking_board_id"
-    t.index ["score"], name: "index_point_rank_items_on_score"
-    t.index ["uid"], name: "index_point_rank_items_on_uid", unique: true
-    t.index ["updated_at"], name: "index_point_rank_items_on_updated_at"
-  end
-
   create_table "projects", force: :cascade do |t|
     t.string "code"
     t.string "secret"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_projects_on_code", unique: true
+  end
+
+  create_table "rank_items", force: :cascade do |t|
+    t.string "type"
+    t.bigint "ranking_board_id", null: false
+    t.float "score", null: false
+    t.string "name"
+    t.string "uid", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ranking_board_id"], name: "index_rank_items_on_ranking_board_id"
+    t.index ["score"], name: "index_rank_items_on_score"
+    t.index ["uid"], name: "index_rank_items_on_uid", unique: true
+    t.index ["updated_at"], name: "index_rank_items_on_updated_at"
   end
 
   create_table "ranking_boards", force: :cascade do |t|
@@ -47,7 +48,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_31_073509) do
 
   create_table "recent_rank_items", force: :cascade do |t|
     t.bigint "ranking_board_id", null: false
-    t.integer "score", null: false, comment: "最新の記録"
+    t.float "score", null: false, comment: "最新の記録"
     t.string "uid", null: false
     t.boolean "new_record_score", default: false, null: false, comment: "新記録かどうか"
     t.datetime "created_at", null: false
@@ -57,7 +58,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_31_073509) do
     t.index ["uid"], name: "index_recent_rank_items_on_uid", unique: true
   end
 
-  add_foreign_key "point_rank_items", "ranking_boards"
+  add_foreign_key "rank_items", "ranking_boards"
   add_foreign_key "ranking_boards", "projects"
   add_foreign_key "recent_rank_items", "ranking_boards"
 end

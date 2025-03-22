@@ -33,7 +33,10 @@ class PointRankingBoard < RankingBoard
     last_rank = nil
     last_score = nil
     rank_items.order(score: :desc, updated_at: :asc).limit(MAX_LIST_COUNT).map.with_index do |item, i|
-      obj = item.slice(:score, :name)
+      obj = {
+        score: item.score_txt,
+        name: item.name,
+      }
 
       # 同着を考慮した順位の算出
       if item.score == last_score
@@ -58,20 +61,22 @@ class PointRankingBoard < RankingBoard
     rank = rank_items.where("score > ?", item.score).count + 1
 
     {
-      score: item.score,
+      score: item.score_txt,
       rank: rank,
       name: item.name
     }
   end
 
   def recent_score(uid)
-    return {} unless (item = recent_items.find_by(uid:))
+    item = recent_items.find_by(uid:).extend(Decorator::PointScore)
+
+    return {} unless item
 
     # プレイヤーの最新スコアより高いレコードを取得して順位を算出
     rank = rank_items.where("score > ?", item.score).count + 1
 
     {
-      score: item.score,
+      score: item.score_txt,
       rank: rank,
       new_record_score: item.new_record_score?
     }
