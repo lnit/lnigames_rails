@@ -9,6 +9,8 @@ class Api::V1::RankingItemsController < Api::V1::ApplicationController
     ranking.add_item!(ranking_params)
 
     head :created
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages } , status: :unprocessable_entity
   end
 
   def permitted_params

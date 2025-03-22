@@ -49,18 +49,39 @@ RSpec.describe "Api::V1::RankingItems", type: :request do
       allow(LniGamesAuth).to receive(:valid?).and_return(true)
     end
 
-    let(:params) do
-      {
-        project_code: project.code,
-        board_num: board.num,
-        uid: SecureRandom.uuid,
-        name: "テスト◆太郎",
-        score: "100",
-        d: "testdigest"
-      }
+    context "正当なリクエストの場合" do
+      let(:params) do
+        {
+          project_code: project.code,
+          board_num: board.num,
+          uid: SecureRandom.uuid,
+          name: "テスト◆太郎",
+          score: "100",
+          d: "testdigest"
+        }
+      end
+
+      it { expect { post_score }.to change(PointRankItem, :count).by(1) }
+      it { expect { post_score }.to change(RecentRankItem, :count).by(1) }
     end
 
-    it { expect { post_score }.to change(PointRankItem, :count).by(1) }
-    it { expect { post_score }.to change(RecentRankItem, :count).by(1) }
+    context "バリデーションエラーの場合" do
+      let(:params) do
+        {
+          project_code: project.code,
+          board_num: board.num,
+          uid: SecureRandom.uuid,
+          name: "長い名前長い名前◆次郎",
+          score: "200",
+          d: "testdigest"
+        }
+      end
+
+      it "エラーレスポンスが返却されること" do
+        post_score
+
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
   end
 end
